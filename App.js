@@ -15,7 +15,14 @@ export default function App() {
         style={styles.background}
       >
         {/* <StatusBar style="auto" color="white" /> */}
-        <Text>Heeellu World</Text>
+        <View>
+          <View>
+            <Text style={styles.logoText}>My Music</Text>
+          </View>
+        </View>
+        <View style={styles.topPickContainer}>
+          <Text style={styles.topPickHeading}>Top Picks</Text>
+        </View>
         {/* <StatusBar style="auto" /> */}
       </LinearGradient>
     </View>
@@ -25,13 +32,28 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    // alignItems: "center",
+
+    // justifyContent: "center",
   },
   background: {
     flex: 1,
     width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    paddingTop: 50,
+    padding: 20,
+    // alignItems: "center",
+    // justifyContent: "center",
+  },
+  logoText: {
+    fontSize: 20,
+    color: "white",
+  },
+  topPickContainer: {
+    marginTop: 40,
+  },
+  topPickHeading: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "700",
   },
 });
