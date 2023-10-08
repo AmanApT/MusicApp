@@ -1,8 +1,17 @@
 // import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, StatusBar, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  Image,
+  ScrollView,
+  ImageBackground,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import searchIcon from "./assets/Vector.png";
-import myMusicLogo from "./assets/Logo.png"
+import myMusicLogo from "./assets/Logo.png";
+import song1 from "./assets/Song1.png";
 
 export default function App() {
   return (
@@ -21,6 +30,24 @@ export default function App() {
         <View style={styles.topPickContainer}>
           <Text style={styles.topPickHeading}>Top Picks</Text>
         </View>
+
+        <ScrollView
+          horizontal
+          contentContainerStyle={styles.SrollContainer}
+        >
+          <ImageBackground source={song1} style={styles.backgroundImage}>
+            {/* Your content goes here */}
+            <View style={styles.content}>
+              <Text style={styles.text}>Item 1</Text>
+            </View>
+          </ImageBackground>
+          <ImageBackground source={song1} style={styles.backgroundImage}>
+            {/* Your content goes here */}
+            <View style={styles.content}>
+              <Text style={styles.text}>Arijit Singh</Text>
+            </View>
+          </ImageBackground>
+        </ScrollView>
         {/* <StatusBar style="auto" /> */}
       </LinearGradient>
     </View>
@@ -39,12 +66,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  brandContainerLeft:{
-    flexDirection:"row",
-    alignItems:"center",
-    gap:15
+  brandContainerLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 15,
   },
-  logo : {
+  logo: {
     width: 40,
     height: 40,
   },
@@ -56,6 +83,18 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     // justifyContent: "center",
   },
+  SrollContainer:{
+    // flexDirection:"row"
+    
+    width:"100%",
+    marginTop:"10%"
+  },
+  backgroundImage:{
+    height:150,
+    width:150,
+    // width:"100%",
+    
+  },
   logoText: {
     fontSize: 25,
     color: "white",
@@ -66,7 +105,7 @@ const styles = StyleSheet.create({
   topPickHeading: {
     color: "white",
     fontSize: 25,
-    marginLeft:5,
+    marginLeft: 5,
     fontWeight: "700",
   },
   searchIcon: {
