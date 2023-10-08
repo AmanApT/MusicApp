@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
   },
   topPickHeading: {
     color: "white",
-    fontSize: 20,
+    fontSize: 25,
+    marginLeft:5,
     fontWeight: "700",
   },
   searchIcon: {
