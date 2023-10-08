@@ -1,6 +1,8 @@
 // import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, StatusBar } from "react-native";
+import { StyleSheet, Text, View, StatusBar, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import searchIcon from "./assets/Vector.png";
+import myMusicLogo from "./assets/Logo.png"
 
 export default function App() {
   return (
@@ -8,8 +10,12 @@ export default function App() {
       <LinearGradient colors={["#22004e", "#000"]} style={styles.background}>
         {/* <StatusBar style="auto" color="white" /> */}
         <View>
-          <View>
-            <Text style={styles.logoText}>My Music</Text>
+          <View style={styles.brandContainer}>
+            <View style={styles.brandContainerLeft}>
+              <Image source={myMusicLogo} style={styles.logo} />
+              <Text style={styles.logoText}>My Music</Text>
+            </View>
+            <Image source={searchIcon} style={styles.searchIcon} />
           </View>
         </View>
         <View style={styles.topPickContainer}>
@@ -27,6 +33,21 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     // justifyContent: "center",
   },
+  brandContainer: {
+    marginTop: "5%",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  brandContainerLeft:{
+    flexDirection:"row",
+    alignItems:"center",
+    gap:15
+  },
+  logo : {
+    width: 40,
+    height: 40,
+  },
   background: {
     flex: 1,
     width: "100%",
@@ -36,7 +57,7 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
   logoText: {
-    fontSize: 20,
+    fontSize: 25,
     color: "white",
   },
   topPickContainer: {
@@ -46,5 +67,9 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
     fontWeight: "700",
+  },
+  searchIcon: {
+    width: 25,
+    height: 25,
   },
 });
