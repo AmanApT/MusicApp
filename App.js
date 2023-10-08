@@ -30,38 +30,55 @@ export default function App() {
 
         <ScrollView horizontal contentContainerStyle={styles.scrollContainer}>
           <View style={styles.row}>
-            <ImageBackground source={song1} style={styles.backgroundImage}>
-              <View style={styles.content}>
+            <View>
+              <ImageBackground source={song1} style={styles.backgroundImage}>
+                {/* <View style={styles.content}>
                 <Text style={styles.text}>Item 1</Text>
-              </View>
-            </ImageBackground>
-            <ImageBackground source={song1} style={styles.backgroundImage}>
-              <View style={styles.content}>
-                <Text style={styles.text}>Arijit Singh</Text>
-              </View>
-            </ImageBackground>
-            <ImageBackground source={song1} style={styles.backgroundImage}>
-              <View style={styles.content}>
-                <Text style={styles.text}>Arijit Singh</Text>
-              </View>
-            </ImageBackground>
+              </View> */}
+              </ImageBackground>
+              <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
+            </View>
+            <View>
+              <ImageBackground
+                source={song1}
+                style={styles.backgroundImage}
+              ></ImageBackground>
+              <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
+            </View>
+            <View>
+              <ImageBackground source={song1} style={styles.backgroundImage}>
+                {/* <View style={styles.content}>
+                  <Text style={styles.text}>Arijit Singh</Text>
+                </View> */}
+              </ImageBackground>
+              <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
+            </View>
           </View>
           <View style={styles.row}>
-            <ImageBackground source={song1} style={styles.backgroundImage}>
-              <View style={styles.content}>
-                <Text style={styles.text}>Arijit Singh</Text>
-              </View>
-            </ImageBackground>
-            <ImageBackground source={song1} style={styles.backgroundImage}>
-              <View style={styles.content}>
-                <Text style={styles.text}>Arijit Singh</Text>
-              </View>
-            </ImageBackground>
-            <ImageBackground source={song1} style={styles.backgroundImage}>
-              <View style={styles.content}>
-                <Text style={styles.text}>Arijit Singh</Text>
-              </View>
-            </ImageBackground>
+            <View>
+              <ImageBackground source={song1} style={styles.backgroundImage}>
+                {/* <View style={styles.content}>
+                  <Text style={styles.text}>Arijit Singh</Text>
+                </View> */}
+              </ImageBackground>
+              <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
+            </View>
+            <View>
+              <ImageBackground source={song1} style={styles.backgroundImage}>
+                {/* <View style={styles.content}>
+                  <Text style={styles.text}>Arijit Singh</Text>
+                </View> */}
+              </ImageBackground>
+              <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
+            </View>
+            <View>
+              <ImageBackground source={song1} style={styles.backgroundImage}>
+                {/* <View style={styles.content}>
+                  <Text style={styles.text}>Arijit Singh</Text>
+                </View> */}
+              </ImageBackground>
+              <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
+            </View>
           </View>
         </ScrollView>
       </LinearGradient>
@@ -94,19 +111,20 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     paddingTop: 50,
-    padding: 20,
+    padding: 15,
     // alignItems: "center",
     // justifyContent: "center",
   },
   scrollContainer: {
-    flexDirection: "column", // Vertical direction
-    alignItems: "flex-start", // Align items to the start
+    flexDirection: "column",
+    alignItems: "flex-start",
     marginTop: "10%",
+    gap: 20,
   },
 
   row: {
-    flexDirection: "row", // Horizontal direction
-    marginBottom: 10, // Adjust the margin as needed
+    flexDirection: "row",
+    // marginBottom: 10,
   },
   backgroundImage: {
     height: 120,
@@ -130,5 +148,8 @@ const styles = StyleSheet.create({
   searchIcon: {
     width: 25,
     height: 25,
+  },
+  backgroundImageText: {
+    color: "white",
   },
 });
