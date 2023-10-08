@@ -17,38 +17,53 @@ export default function App() {
   return (
     <View style={styles.container}>
       <LinearGradient colors={["#22004e", "#000"]} style={styles.background}>
-        {/* <StatusBar style="auto" color="white" /> */}
-        <View>
-          <View style={styles.brandContainer}>
-            <View style={styles.brandContainerLeft}>
-              <Image source={myMusicLogo} style={styles.logo} />
-              <Text style={styles.logoText}>My Music</Text>
-            </View>
-            <Image source={searchIcon} style={styles.searchIcon} />
+        <View style={styles.brandContainer}>
+          <View style={styles.brandContainerLeft}>
+            <Image source={myMusicLogo} style={styles.logo} />
+            <Text style={styles.logoText}>My Music</Text>
           </View>
+          <Image source={searchIcon} style={styles.searchIcon} />
         </View>
         <View style={styles.topPickContainer}>
           <Text style={styles.topPickHeading}>Top Picks</Text>
         </View>
 
-        <ScrollView
-          horizontal
-          contentContainerStyle={styles.SrollContainer}
-        >
-          <ImageBackground source={song1} style={styles.backgroundImage}>
-            {/* Your content goes here */}
-            <View style={styles.content}>
-              <Text style={styles.text}>Item 1</Text>
-            </View>
-          </ImageBackground>
-          <ImageBackground source={song1} style={styles.backgroundImage}>
-            {/* Your content goes here */}
-            <View style={styles.content}>
-              <Text style={styles.text}>Arijit Singh</Text>
-            </View>
-          </ImageBackground>
+        <ScrollView horizontal contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.row}>
+            <ImageBackground source={song1} style={styles.backgroundImage}>
+              <View style={styles.content}>
+                <Text style={styles.text}>Item 1</Text>
+              </View>
+            </ImageBackground>
+            <ImageBackground source={song1} style={styles.backgroundImage}>
+              <View style={styles.content}>
+                <Text style={styles.text}>Arijit Singh</Text>
+              </View>
+            </ImageBackground>
+            <ImageBackground source={song1} style={styles.backgroundImage}>
+              <View style={styles.content}>
+                <Text style={styles.text}>Arijit Singh</Text>
+              </View>
+            </ImageBackground>
+          </View>
+          <View style={styles.row}>
+            <ImageBackground source={song1} style={styles.backgroundImage}>
+              <View style={styles.content}>
+                <Text style={styles.text}>Arijit Singh</Text>
+              </View>
+            </ImageBackground>
+            <ImageBackground source={song1} style={styles.backgroundImage}>
+              <View style={styles.content}>
+                <Text style={styles.text}>Arijit Singh</Text>
+              </View>
+            </ImageBackground>
+            <ImageBackground source={song1} style={styles.backgroundImage}>
+              <View style={styles.content}>
+                <Text style={styles.text}>Arijit Singh</Text>
+              </View>
+            </ImageBackground>
+          </View>
         </ScrollView>
-        {/* <StatusBar style="auto" /> */}
       </LinearGradient>
     </View>
   );
@@ -83,17 +98,21 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     // justifyContent: "center",
   },
-  SrollContainer:{
-    // flexDirection:"row"
-    
-    width:"100%",
-    marginTop:"10%"
+  scrollContainer: {
+    flexDirection: "column", // Vertical direction
+    alignItems: "flex-start", // Align items to the start
+    marginTop: "10%",
   },
-  backgroundImage:{
-    height:150,
-    width:150,
+
+  row: {
+    flexDirection: "row", // Horizontal direction
+    marginBottom: 10, // Adjust the margin as needed
+  },
+  backgroundImage: {
+    height: 120,
+    width: 120,
+    marginRight: 20,
     // width:"100%",
-    
   },
   logoText: {
     fontSize: 25,
