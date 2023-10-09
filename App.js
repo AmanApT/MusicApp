@@ -7,13 +7,31 @@ import {
   Image,
   ScrollView,
   ImageBackground,
+  Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import searchIcon from "./assets/Vector.png";
 import myMusicLogo from "./assets/Logo.png";
 import song1 from "./assets/Song1.png";
+import { useState } from "react";
+import ModalComp from "./components/ModalComp";
 
 export default function App() {
+  const windowHeight = Dimensions.get("window").height;
+
+  // This state would determine if the drawer sheet is visible or not
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+
+  // Function to open the bottom sheet
+  const handleOpenBottomSheet = () => {
+    setIsBottomSheetOpen(true);
+  };
+
+  // Function to close the bottom sheet
+  const handleCloseBottomSheet = () => {
+    setIsBottomSheetOpen(false);
+  };
   return (
     <View style={styles.container}>
       <LinearGradient colors={["#22004e", "#000"]} style={styles.background}>
@@ -82,6 +100,35 @@ export default function App() {
           </View>
         </ScrollView>
       </LinearGradient>
+      <View style={{ backgroundColor: "#22004e", height: 70, paddingLeft: 20 }}>
+        <TouchableOpacity
+          onPress={handleOpenBottomSheet}
+          style={{
+            flex: 1,
+            // width: "90%",
+            alignItems: "flex-start",
+            // paddingHorizontal: 15,
+            justifyContent: "center",
+            // borderWidth: 1,
+            // borderColor: "#86827e",
+            // paddingVertical: 12,
+            // borderRadius: 8,
+          }}
+        >
+          {/* <Text style={{ color: "white" }}>Click Me</Text> */}
+          <View style={{ flexDirection: "row" }}>
+            <View
+              style={{ backgroundColor: "red", width: 30, height: 30 }}
+            ></View>
+            <Text style={{ color: "white", marginLeft: 10 }}>Apna Bana Le</Text>
+          </View>
+        </TouchableOpacity>
+        <ModalComp
+          windowHeight={windowHeight}
+          isBottomSheetOpen={isBottomSheetOpen}
+          handleCloseBottomSheet={handleCloseBottomSheet}
+        />
+      </View>
     </View>
   );
 }
