@@ -14,6 +14,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import searchIcon from "./assets/Vector.png";
 import myMusicLogo from "./assets/Logo.png";
 import song1 from "./assets/Song1.png";
+import coverSong from "./assets/coverSong.mp3";
+import coverSongImage from "./assets/coverSong.jpg";
 import { useState } from "react";
 import ModalComp from "./components/ModalComp";
 
@@ -32,6 +34,14 @@ export default function App() {
   const handleCloseBottomSheet = () => {
     setIsBottomSheetOpen(false);
   };
+
+
+  const playSong = ()=>{
+    console.log('====================================');
+    console.log("played");
+    console.log('====================================');
+  }
+
   return (
     <View style={styles.container}>
       <LinearGradient colors={["#22004e", "#000"]} style={styles.background}>
@@ -56,13 +66,13 @@ export default function App() {
               </ImageBackground>
               <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
             </View>
-            <View>
+            <TouchableOpacity onPress={playSong}>
               <ImageBackground
-                source={song1}
+                source={coverSongImage}
                 style={styles.backgroundImage}
               ></ImageBackground>
               <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
-            </View>
+            </TouchableOpacity >
             <View>
               <ImageBackground source={song1} style={styles.backgroundImage}>
                 {/* <View style={styles.content}>
