@@ -17,6 +17,13 @@ export default function ModalComp({
   windowHeight,
   isBottomSheetOpen,
   handleCloseBottomSheet,
+  playSong,
+  isPlaying,
+  playbackProgress,
+  setPlaybackProgress,
+  sound,
+  duration,
+  currentTime,
 }) {
   const panResponder = useRef(
     PanResponder.create({
@@ -33,6 +40,13 @@ export default function ModalComp({
       },
     })
   ).current;
+
+  const formatTime = (milliseconds) => {
+    const seconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const formattedSeconds = seconds % 60;
+    return `${minutes}:${formattedSeconds < 10 ? "0" : ""}${formattedSeconds}`;
+  };
 
   return (
     <Modal
@@ -59,12 +73,24 @@ export default function ModalComp({
               minimumTrackTintColor="red"
               maximumTrackTintColor="black"
               thumbTintColor="red"
-              onSlidingComplete={() => {}}
+              value={playbackProgress}
+              onSlidingStart={() => {
+                if (isPlaying) {
+                  sound.pauseAsync();
+                }
+              }}
+              onValueChange={(value) => {
+                setPlaybackProgress(value);
+              }}
+              onSlidingComplete={(value) => {
+                sound.setPositionAsync(value * duration);
+                sound.playAsync();
+              }}
             />
 
             <View style={styles.durationContainer}>
-              <Text>00:00</Text>
-              <Text>02:40</Text>
+              <Text>{formatTime(currentTime)}</Text>
+              <Text>{formatTime(duration)}</Text>
             </View>
           </View>
 
@@ -72,8 +98,12 @@ export default function ModalComp({
             <TouchableOpacity>
               <MaterialIcons name="skip-previous" size={32} />
             </TouchableOpacity>
-            <TouchableOpacity>
-              <AntDesign name="play" size={32} color="black" />
+            <TouchableOpacity onPress={playSong}>
+              {isPlaying ? (
+                <AntDesign name="pause" size={32} color="black" />
+              ) : (
+                <AntDesign name="play" size={32} color="black" />
+              )}
             </TouchableOpacity>
             <TouchableOpacity>
               <MaterialIcons name="skip-next" size={32} />

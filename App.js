@@ -27,6 +27,8 @@ export default function App() {
   // This state would determine if the drawer sheet is visible or not
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
+  const [playbackProgress, setPlaybackProgress] = useState(0);
+
   // Function to open the bottom sheet
   const handleOpenBottomSheet = () => {
     setIsBottomSheetOpen(true);
@@ -37,10 +39,10 @@ export default function App() {
     setIsBottomSheetOpen(false);
   };
 
-  // "./assets/coverSong.mp3"
-
   const [isPlaying, setIsPlaying] = useState(false); // State to track play/pause
   const [sound, setSound] = useState(null);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
   const playSong = async () => {
     if (sound) {
@@ -50,15 +52,25 @@ export default function App() {
       } else {
         await sound.playAsync();
       }
-      setIsPlaying(!isPlaying); // Toggle the play state
+      setIsPlaying(!isPlaying);
     } else {
       // If sound is not loaded, create and play the sound
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        require("./assets/coverSong.mp3")
+      const { sound: newSound, status } = await Audio.Sound.createAsync(
+        require("./assets/coverSong.mp3"),
+        { shouldPlay: true, isLooping: false },
+        onPlaybackStatusUpdate
       );
       setSound(newSound);
-      await newSound.playAsync();
-      setIsPlaying(true); // Set play state to true
+      setDuration(status.durationMillis);
+      setIsPlaying(true);
+    }
+  };
+
+  const onPlaybackStatusUpdate = (status) => {
+    if (status.isLoaded && !status.isLooping) {
+      const progress = status.positionMillis / status.durationMillis;
+      setPlaybackProgress(progress);
+      setCurrentTime(status.positionMillis);
     }
   };
 
@@ -178,6 +190,13 @@ export default function App() {
           windowHeight={windowHeight}
           isBottomSheetOpen={isBottomSheetOpen}
           handleCloseBottomSheet={handleCloseBottomSheet}
+          playSong={playSong}
+          isPlaying={isPlaying}
+          playbackProgress={playbackProgress}
+          setPlaybackProgress={setPlaybackProgress}
+          sound={sound}
+          duration={duration}
+          currentTime={currentTime}
         />
       </View>
     </View>
