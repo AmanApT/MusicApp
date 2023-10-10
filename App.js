@@ -14,7 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import searchIcon from "./assets/Vector.png";
 import myMusicLogo from "./assets/Logo.png";
 import song1 from "./assets/Song1.png";
-// import coverSong from "./assets/coverSong.mp3";
+import coverSong from "./assets/coverSong.mp3";
 import coverSongImage from "./assets/coverSong.jpg";
 import { useState } from "react";
 import ModalComp from "./components/ModalComp";
@@ -56,7 +56,7 @@ export default function App() {
     } else {
       // If sound is not loaded, create and play the sound
       const { sound: newSound, status } = await Audio.Sound.createAsync(
-        require("./assets/coverSong.mp3"),
+        coverSong,
         { shouldPlay: true, isLooping: false },
         onPlaybackStatusUpdate
       );
