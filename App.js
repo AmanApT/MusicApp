@@ -130,15 +130,27 @@ export default function App() {
           </View>
         </ScrollView>
       </LinearGradient>
-      <View style={{ backgroundColor: "#22004e", height: 70, paddingLeft: 20 }}>
+      <View
+        style={{
+          backgroundColor: "#22004e",
+          height: 70,
+          // paddingLeft: 20,
+          // paddingRight: 20,
+          padding: 20,
+          // width: "80%",
+        }}
+      >
         <TouchableOpacity
           onPress={handleOpenBottomSheet}
           style={{
             flex: 1,
+
             // width: "90%",
-            alignItems: "flex-start",
+            // alignItems: "flex-start",
             // paddingHorizontal: 15,
-            justifyContent: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
             // borderWidth: 1,
             // borderColor: "#86827e",
             // paddingVertical: 12,
@@ -146,20 +158,21 @@ export default function App() {
           }}
         >
           {/* <Text style={{ color: "white" }}>Click Me</Text> */}
-          <View style={{ flexDirection: "row", gap:200 }}>
-            <View style={{flexDirection:"row"}}>
-            <View
-              style={{ backgroundColor: "yellow", width: 30, height: 30 }}
-            ></View>
-            <Text style={{ color: "white", marginLeft: 10 }}>Apna Bana Le</Text>
+          <View style={{ flexDirection: "row", gap: 200 }}>
+            <View style={{ flexDirection: "row" }}>
+              <View
+                style={{ backgroundColor: "yellow", width: 30, height: 30 }}
+              ></View>
+              <Text style={{ color: "white", marginLeft: 10 }}>
+                Apna Bana Le
+              </Text>
             </View>
-            {
-              isPlaying ?  <ImageBackground source={gif} style={{width:30,height:30}} /> : <></>
-            }
-           
-
-              
           </View>
+          {isPlaying ? (
+            <ImageBackground source={gif} style={{ width: 30, height: 30 }} />
+          ) : (
+            <></>
+          )}
         </TouchableOpacity>
         <ModalComp
           windowHeight={windowHeight}
