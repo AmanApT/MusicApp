@@ -197,6 +197,7 @@ export default function App() {
           sound={sound}
           duration={duration}
           currentTime={currentTime}
+          setCurrentTime={setCurrentTime}
         />
       </View>
     </View>

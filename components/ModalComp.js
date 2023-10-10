@@ -84,7 +84,9 @@ export default function ModalComp({
               }}
               onSlidingComplete={(value) => {
                 sound.setPositionAsync(value * duration);
-                sound.playAsync();
+                if (isPlaying) {
+                  sound.playAsync();
+                }
               }}
             />
 
