@@ -3,7 +3,7 @@ const songs = [
     id: 1,
     title: "Apna Bana Le",
     artist: "Arijit Singh",
-    imagePath: require(""),
+    imagePath: require("../assets/coverSong.jpg"),
     songPath: "require('./assets/coverSong.mp3')",
   },
 ];
