@@ -20,6 +20,7 @@ import { useState } from "react";
 import ModalComp from "./components/ModalComp";
 import { Audio } from "expo-av";
 import gif from "./assets/gif.gif";
+import songs from "./components/listOfSongs";
 
 export default function App() {
   const windowHeight = Dimensions.get("window").height;
@@ -56,7 +57,7 @@ export default function App() {
     } else {
       // If sound is not loaded, create and play the sound
       const { sound: newSound, status } = await Audio.Sound.createAsync(
-        coverSong,
+        songs[0].songPath,
         { shouldPlay: true, isLooping: false },
         onPlaybackStatusUpdate
       );
@@ -100,7 +101,7 @@ export default function App() {
             </View>
             <TouchableOpacity onPress={playSong}>
               <ImageBackground
-                source={coverSongImage}
+                source={songs[0].imagePath}
                 style={styles.backgroundImage}
               ></ImageBackground>
               <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
