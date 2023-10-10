@@ -14,10 +14,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import searchIcon from "./assets/Vector.png";
 import myMusicLogo from "./assets/Logo.png";
 import song1 from "./assets/Song1.png";
-import coverSong from "./assets/coverSong.mp3";
+// import coverSong from "./assets/coverSong.mp3";
 import coverSongImage from "./assets/coverSong.jpg";
 import { useState } from "react";
 import ModalComp from "./components/ModalComp";
+import { Audio } from "expo-av";
+import gif from "./assets/gif.gif";
 
 export default function App() {
   const windowHeight = Dimensions.get("window").height;
@@ -35,12 +37,30 @@ export default function App() {
     setIsBottomSheetOpen(false);
   };
 
+  // "./assets/coverSong.mp3"
 
-  const playSong = ()=>{
-    console.log('====================================');
-    console.log("played");
-    console.log('====================================');
-  }
+  const [isPlaying, setIsPlaying] = useState(false); // State to track play/pause
+  const [sound, setSound] = useState(null);
+
+  const playSong = async () => {
+    if (sound) {
+      // If sound is already loaded, toggle between play and pause
+      if (isPlaying) {
+        await sound.pauseAsync();
+      } else {
+        await sound.playAsync();
+      }
+      setIsPlaying(!isPlaying); // Toggle the play state
+    } else {
+      // If sound is not loaded, create and play the sound
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        require("./assets/coverSong.mp3")
+      );
+      setSound(newSound);
+      await newSound.playAsync();
+      setIsPlaying(true); // Set play state to true
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -72,7 +92,7 @@ export default function App() {
                 style={styles.backgroundImage}
               ></ImageBackground>
               <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
-            </TouchableOpacity >
+            </TouchableOpacity>
             <View>
               <ImageBackground source={song1} style={styles.backgroundImage}>
                 {/* <View style={styles.content}>
@@ -126,11 +146,19 @@ export default function App() {
           }}
         >
           {/* <Text style={{ color: "white" }}>Click Me</Text> */}
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", gap:200 }}>
+            <View style={{flexDirection:"row"}}>
             <View
-              style={{ backgroundColor: "red", width: 30, height: 30 }}
+              style={{ backgroundColor: "yellow", width: 30, height: 30 }}
             ></View>
             <Text style={{ color: "white", marginLeft: 10 }}>Apna Bana Le</Text>
+            </View>
+            {
+              isPlaying ?  <ImageBackground source={gif} style={{width:30,height:30}} /> : <></>
+            }
+           
+
+              
           </View>
         </TouchableOpacity>
         <ModalComp
