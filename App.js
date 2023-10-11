@@ -44,27 +44,39 @@ export default function App() {
   const [sound, setSound] = useState(null);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [currSong, setCurrSong] = useState(null);
 
   const soundRef = useRef();
  
   const playSong = async (eachSong) => {
+    setCurrSong(eachSong);
     // If there's a sound currently playing, stop it
+    
+    console.log('====================================');
+    console.log('====================================');
     if (soundRef.current) {
       await soundRef.current.stopAsync();
       soundRef.current.unloadAsync();
+      setIsPlaying(!isPlaying)
     }
 
     // Create and play the new sound
-    const { sound, status } = await Audio.Sound.createAsync(
-      eachSong.songPath,
-      { shouldPlay: true, isLooping: false },
-      onPlaybackStatusUpdate
-    );
-    soundRef.current = sound;
-    setIsPlaying(true);
-  };
+if(isPlaying){
+  const { sound, status } = await Audio.Sound.createAsync(
+    eachSong.songPath,
+    { shouldPlay: true, isLooping: false },
+    onPlaybackStatusUpdate
+  );
+  soundRef.current = sound;
+  setIsPlaying(true);
+};
+}
+   
 
   const onPlaybackStatusUpdate = (status) => {
+    // console.log('====================================');
+    // console.log(status);
+    // console.log('====================================');
     if (status.isLoaded && !status.isLooping) {
       const progress = status.positionMillis / status.durationMillis;
       setPlaybackProgress(progress);
@@ -185,7 +197,7 @@ export default function App() {
                 style={{ backgroundColor: "yellow", width: 30, height: 30 }}
               ></View>
               <Text style={{ color: "white", marginLeft: 10 }}>
-                Apna Bana Le
+               {currSong ? currSong.title : ""}
               </Text>
             </View>
           </View>
@@ -207,6 +219,7 @@ export default function App() {
           duration={duration}
           currentTime={currentTime}
           setCurrentTime={setCurrentTime}
+          currSong={currSong}
         />
       </View>
     </View>

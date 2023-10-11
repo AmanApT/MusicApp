@@ -27,6 +27,7 @@ export default function ModalComp({
   sound,
   duration,
   currentTime,
+  currSong
 }) {
   const panResponder = useRef(
     PanResponder.create({
@@ -63,12 +64,12 @@ export default function ModalComp({
         <View style={styles.bottomSheet} {...panResponder.panHandlers}>
           <View style={styles.imageContainer}>
             <ImageBackground
-            source={cover} style={{ width: 290, height: 290 }}
+            source={currSong ? currSong.imagePath : cover} style={{ width: 290, height: 290 }}
             />
           </View>
           <View>
-            <Text style={styles.songTitle}>Apna Bana Le Cover</Text>
-            <Text style={styles.songArtist}>Ananya Sharma</Text>
+            <Text style={styles.songTitle}>{currSong ? currSong.title: ""}</Text>
+            <Text style={styles.songArtist}>{currSong ? currSong.artist: ""}</Text>
           </View>
 
           <View>
@@ -106,7 +107,7 @@ export default function ModalComp({
             <TouchableOpacity>
               <MaterialIcons color="white" name="skip-previous" size={32} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={playSong}>
+            <TouchableOpacity onPress={()=>(playSong(currSong))}>
               {isPlaying ? (
                 <AntDesign name="pause" size={32} color="white" />
               ) : (
