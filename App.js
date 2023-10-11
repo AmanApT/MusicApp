@@ -16,7 +16,7 @@ import myMusicLogo from "./assets/Logo.png";
 import song1 from "./assets/Song1.png";
 import coverSong from "./assets/coverSong.mp3";
 import coverSongImage from "./assets/coverSong.jpg";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ModalComp from "./components/ModalComp";
 import { Audio } from "expo-av";
 import gif from "./assets/gif.gif";
@@ -45,26 +45,23 @@ export default function App() {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
 
-  const playSong = async () => {
-    if (sound) {
-      // If sound is already loaded, toggle between play and pause
-      if (isPlaying) {
-        await sound.pauseAsync();
-      } else {
-        await sound.playAsync();
-      }
-      setIsPlaying(!isPlaying);
-    } else {
-      // If sound is not loaded, create and play the sound
-      const { sound: newSound, status } = await Audio.Sound.createAsync(
-        songs[0].songPath,
-        { shouldPlay: true, isLooping: false },
-        onPlaybackStatusUpdate
-      );
-      setSound(newSound);
-      setDuration(status.durationMillis);
-      setIsPlaying(true);
+  const soundRef = useRef();
+ 
+  const playSong = async (eachSong) => {
+    // If there's a sound currently playing, stop it
+    if (soundRef.current) {
+      await soundRef.current.stopAsync();
+      soundRef.current.unloadAsync();
     }
+
+    // Create and play the new sound
+    const { sound, status } = await Audio.Sound.createAsync(
+      eachSong.songPath,
+      { shouldPlay: true, isLooping: false },
+      onPlaybackStatusUpdate
+    );
+    soundRef.current = sound;
+    setIsPlaying(true);
   };
 
   const onPlaybackStatusUpdate = (status) => {
@@ -99,13 +96,23 @@ export default function App() {
               </ImageBackground>
               <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
             </View>
-            <TouchableOpacity onPress={playSong}>
-              <ImageBackground
-                source={songs[0].imagePath}
-                style={styles.backgroundImage}
-              ></ImageBackground>
-              <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
-            </TouchableOpacity>
+        {
+                songs.map((eachSong,id)=>{
+                    return (
+                      <TouchableOpacity key={id} onPress={()=>(playSong(eachSong))}>
+                      <ImageBackground
+                        source={eachSong.imagePath}
+                        style={styles.backgroundImage}
+                      ></ImageBackground>
+                      <Text style={styles.backgroundImageText}>{eachSong.title}</Text>
+                    </TouchableOpacity>
+                    )
+                })
+              }
+             
+             
+          
+        
             <View>
               <ImageBackground source={song1} style={styles.backgroundImage}>
                 {/* <View style={styles.content}>
@@ -153,6 +160,7 @@ export default function App() {
           // width: "80%",
         }}
       >
+       
         <TouchableOpacity
           onPress={handleOpenBottomSheet}
           style={{
