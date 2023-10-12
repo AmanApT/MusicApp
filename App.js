@@ -40,38 +40,86 @@ export default function App() {
     setIsBottomSheetOpen(false);
   };
 
-  const [isPlaying, setIsPlaying] = useState(false); // State to track play/pause
+  const [isPlaying, setIsPlaying] = useState(false);
   const [sound, setSound] = useState(null);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [currSong, setCurrSong] = useState(null);
 
-  const soundRef = useRef();
- 
-  const playSong = async (eachSong) => {
-    setCurrSong(eachSong);
-    // If there's a sound currently playing, stop it
-    
-    console.log('====================================');
-    console.log('====================================');
-    if (soundRef.current) {
-      await soundRef.current.stopAsync();
-      soundRef.current.unloadAsync();
-      setIsPlaying(!isPlaying)
-    }
+  // const soundRef = useRef();
 
-    // Create and play the new sound
-if(isPlaying){
-  const { sound, status } = await Audio.Sound.createAsync(
-    eachSong.songPath,
-    { shouldPlay: true, isLooping: false },
-    onPlaybackStatusUpdate
-  );
-  soundRef.current = sound;
-  setIsPlaying(true);
-};
-}
-   
+  const playSong = async (eachSong) => {
+    try {
+      if (sound) {
+        if (eachSong.id !== currSong.id) {
+          await sound.stopAsync();
+          await sound.unloadAsync();
+
+          // Load and play the new song
+          const { sound: newSound, status } = await Audio.Sound.createAsync(
+            eachSong.songPath,
+            { shouldPlay: true, isLooping: false },
+            onPlaybackStatusUpdate
+          );
+
+          setSound(newSound);
+          setIsPlaying(true);
+          setCurrSong(eachSong);
+        } else {
+          await sound.stopAsync();
+          await sound.unloadAsync();
+
+          const { sound: newSound, status } = await Audio.Sound.createAsync(
+            eachSong.songPath,
+            { shouldPlay: true, isLooping: false },
+            onPlaybackStatusUpdate
+          );
+
+          setSound(newSound);
+          setIsPlaying(true);
+          setCurrSong(eachSong);
+        }
+      } else {
+        // If there's no sound loaded, create a new one
+        const { sound: newSound, status } = await Audio.Sound.createAsync(
+          eachSong.songPath,
+          { shouldPlay: true, isLooping: false },
+          onPlaybackStatusUpdate
+        );
+
+        setSound(newSound);
+        setIsPlaying(true);
+        setCurrSong(eachSong);
+      }
+    } catch (error) {
+      console.error("Error playing the song", error);
+    }
+  };
+
+  const togglePlayPause = async () => {
+    try {
+      if (sound) {
+        if (isPlaying) {
+          await sound.pauseAsync();
+        } else {
+          await sound.playAsync();
+        }
+        setIsPlaying(!isPlaying);
+      } else {
+        // If there's no sound loaded, create a new one and play it
+        const { sound: newSound, status } = await Audio.Sound.createAsync(
+          currSong.songPath,
+          { shouldPlay: true, isLooping: false },
+          onPlaybackStatusUpdate
+        );
+
+        setSound(newSound);
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.error("Error toggling play/pause", error);
+    }
+  };
 
   const onPlaybackStatusUpdate = (status) => {
     // console.log('====================================');
@@ -81,6 +129,7 @@ if(isPlaying){
       const progress = status.positionMillis / status.durationMillis;
       setPlaybackProgress(progress);
       setCurrentTime(status.positionMillis);
+      setDuration(status.durationMillis);
     }
   };
 
@@ -108,23 +157,20 @@ if(isPlaying){
               </ImageBackground>
               <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
             </View>
-        {
-                songs.map((eachSong,id)=>{
-                    return (
-                      <TouchableOpacity key={id} onPress={()=>(playSong(eachSong))}>
-                      <ImageBackground
-                        source={eachSong.imagePath}
-                        style={styles.backgroundImage}
-                      ></ImageBackground>
-                      <Text style={styles.backgroundImageText}>{eachSong.title}</Text>
-                    </TouchableOpacity>
-                    )
-                })
-              }
-             
-             
-          
-        
+            {songs.map((eachSong, id) => {
+              return (
+                <TouchableOpacity key={id} onPress={() => playSong(eachSong)}>
+                  <ImageBackground
+                    source={eachSong.imagePath}
+                    style={styles.backgroundImage}
+                  ></ImageBackground>
+                  <Text style={styles.backgroundImageText}>
+                    {eachSong.title}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+
             <View>
               <ImageBackground source={song1} style={styles.backgroundImage}>
                 {/* <View style={styles.content}>
@@ -172,7 +218,6 @@ if(isPlaying){
           // width: "80%",
         }}
       >
-       
         <TouchableOpacity
           onPress={handleOpenBottomSheet}
           style={{
@@ -197,7 +242,7 @@ if(isPlaying){
                 style={{ backgroundColor: "yellow", width: 30, height: 30 }}
               ></View>
               <Text style={{ color: "white", marginLeft: 10 }}>
-               {currSong ? currSong.title : ""}
+                {currSong ? currSong.title : ""}
               </Text>
             </View>
           </View>
@@ -220,6 +265,7 @@ if(isPlaying){
           currentTime={currentTime}
           setCurrentTime={setCurrentTime}
           currSong={currSong}
+          togglePlayPause={togglePlayPause}
         />
       </View>
     </View>

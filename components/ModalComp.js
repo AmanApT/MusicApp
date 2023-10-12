@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import cover from '../assets/coverSong.jpg'
+import cover from "../assets/coverSong.jpg";
 import {
   Modal,
   TouchableOpacity,
@@ -15,6 +15,7 @@ import Slider from "@react-native-community/slider";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { debounce } from "lodash";
 
 export default function ModalComp({
   windowHeight,
@@ -27,7 +28,8 @@ export default function ModalComp({
   sound,
   duration,
   currentTime,
-  currSong
+  currSong,
+  togglePlayPause,
 }) {
   const panResponder = useRef(
     PanResponder.create({
@@ -45,6 +47,10 @@ export default function ModalComp({
     })
   ).current;
 
+  const debouncedUpdateProgress = debounce((value) => {
+    setPlaybackProgress(value);
+  }, 200);
+
   const formatTime = (milliseconds) => {
     const seconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -60,80 +66,89 @@ export default function ModalComp({
       onRequestClose={handleCloseBottomSheet}
     >
       <LinearGradient colors={["#8BF5FA", "#000"]} style={styles.background}>
-      <View style={[styles.modalContainer]}>
-        <View style={styles.bottomSheet} {...panResponder.panHandlers}>
-          <View style={styles.imageContainer}>
-            <ImageBackground
-            source={currSong ? currSong.imagePath : cover} style={{ width: 290, height: 290 }}
-            />
-          </View>
-          <View>
-            <Text style={styles.songTitle}>{currSong ? currSong.title: ""}</Text>
-            <Text style={styles.songArtist}>{currSong ? currSong.artist: ""}</Text>
-          </View>
+        <View style={[styles.modalContainer]}>
+          <View style={styles.bottomSheet} {...panResponder.panHandlers}>
+            <View style={styles.imageContainer}>
+              <ImageBackground
+                source={currSong ? currSong.imagePath : cover}
+                style={{ width: 290, height: 290 }}
+              />
+            </View>
+            <View>
+              <Text style={styles.songTitle}>
+                {currSong ? currSong.title : ""}
+              </Text>
+              <Text style={styles.songArtist}>
+                {currSong ? currSong.artist : ""}
+              </Text>
+            </View>
 
-          <View>
-            <Slider
-              style={styles.progessBar}
-              minimumValue={0}
-              maximumValue={1}
-              minimumTrackTintColor="blue"
-              maximumTrackTintColor="black"
-              thumbTintColor="blue"
-              value={playbackProgress}
-              onSlidingStart={() => {
-                if (isPlaying) {
-                  sound.pauseAsync();
-                }
-              }}
-              onValueChange={(value) => {
-                setPlaybackProgress(value);
-              }}
-              onSlidingComplete={(value) => {
-                sound.setPositionAsync(value * duration);
-                if (isPlaying) {
-                  sound.playAsync();
-                }
-              }}
-            />
+            <View>
+              <Slider
+                style={styles.progessBar}
+                minimumValue={0}
+                maximumValue={1}
+                minimumTrackTintColor="blue"
+                maximumTrackTintColor="black"
+                thumbTintColor="blue"
+                value={playbackProgress}
+                onSlidingStart={() => {
+                  if (isPlaying) {
+                    sound.pauseAsync();
+                  }
+                }}
+                onValueChange={(value) => {
+                  debouncedUpdateProgress(value);
+                }}
+                onSlidingComplete={async (value) => {
+                  if (sound) {
+                    const newPosition = value * duration;
+                    await sound.setPositionAsync(newPosition);
+                    if (isPlaying) {
+                      sound.playAsync();
+                    }
+                  }
+                }}
+              />
 
-            <View style={styles.durationContainer}>
-              <Text style={styles.currentTime} >{formatTime(currentTime)}</Text>
-              <Text style={styles.currentTime} >{formatTime(duration)}</Text>
+              <View style={styles.durationContainer}>
+                <Text style={styles.currentTime}>
+                  {formatTime(currentTime)}
+                </Text>
+                <Text style={styles.currentTime}>{formatTime(duration)}</Text>
+              </View>
+            </View>
+
+            <View style={styles.controlContainer}>
+              <TouchableOpacity>
+                <MaterialIcons color="white" name="skip-previous" size={32} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={togglePlayPause}>
+                {isPlaying ? (
+                  <AntDesign name="pause" size={32} color="white" />
+                ) : (
+                  <AntDesign name="play" size={32} color="white" />
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <MaterialIcons color="white" name="skip-next" size={32} />
+              </TouchableOpacity>
             </View>
           </View>
-
-          <View style={styles.controlContainer}>
-            <TouchableOpacity>
-              <MaterialIcons color="white" name="skip-previous" size={32} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>(playSong(currSong))}>
-              {isPlaying ? (
-                <AntDesign name="pause" size={32} color="white" />
-              ) : (
-                <AntDesign name="play" size={32} color="white" />
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <MaterialIcons color="white" name="skip-next" size={32} />
-            </TouchableOpacity>
-          </View>
         </View>
-      </View>
       </LinearGradient>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  background:{
+  background: {
     flex: 1,
     width: "100%",
     paddingTop: 50,
     // padding: -15,
   },
   modalContainer: {
-    
     // flex: 1,
     // justifyContent: "flex-end",
   },
@@ -146,11 +161,10 @@ const styles = StyleSheet.create({
     paddingVertical: 23,
     paddingHorizontal: 25,
   },
-  currentTime:{
-color:"white"
+  currentTime: {
+    color: "white",
   },
   imageContainer: {
-
     width: 300,
     height: 300,
     justifyContent: "center",
