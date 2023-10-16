@@ -16,19 +16,42 @@ import myMusicLogo from "./assets/Logo.png";
 import song1 from "./assets/Song1.png";
 import coverSong from "./assets/coverSong.mp3";
 import coverSongImage from "./assets/coverSong.jpg";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ModalComp from "./components/ModalComp";
-import { Audio } from "expo-av";
+import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av";
 import gif from "./assets/gif.gif";
-import songs from "./components/listOfSongs";
+import TopSongs1 from "./components/listOfSongs";
+// import TrackPlayer from "react-native-track-player";
 
 export default function App() {
+  useEffect(() => {
+    const setupAudio = async () => {
+      try {
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+          staysActiveInBackground: true,
+          interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+          playsInSilentModeIOS: true,
+          shouldDuckAndroid: true,
+          interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
+          playThroughEarpieceAndroid: false,
+        });
+      } catch (error) {
+        console.error("Error setting up audio mode", error);
+      }
+    };
+
+    setupAudio();
+  }, []);
+
   const windowHeight = Dimensions.get("window").height;
 
   // This state would determine if the drawer sheet is visible or not
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   const [playbackProgress, setPlaybackProgress] = useState(0);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   // Function to open the bottom sheet
   const handleOpenBottomSheet = () => {
@@ -45,6 +68,22 @@ export default function App() {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [currSong, setCurrSong] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [shouldPlayNext, setShouldPlayNext] = useState(false);
+
+  useEffect(() => {
+    // Check if the next song should be played
+    if (shouldPlayNext) {
+      // Reset the shouldPlayNext state
+      setShouldPlayNext(false);
+
+      // Calculate the index of the next song
+      const nextIndex = (currentIndex + 1) % TopSongs1.length;
+
+      // Play the next song
+      playSong(TopSongs1[nextIndex]);
+    }
+  }, [shouldPlayNext]);
 
   // const soundRef = useRef();
 
@@ -65,6 +104,7 @@ export default function App() {
           setSound(newSound);
           setIsPlaying(true);
           setCurrSong(eachSong);
+          setCurrentIndex(eachSong.id - 1);
         } else {
           await sound.stopAsync();
           await sound.unloadAsync();
@@ -78,6 +118,7 @@ export default function App() {
           setSound(newSound);
           setIsPlaying(true);
           setCurrSong(eachSong);
+          setCurrentIndex(eachSong.id - 1);
         }
       } else {
         // If there's no sound loaded, create a new one
@@ -87,6 +128,7 @@ export default function App() {
           onPlaybackStatusUpdate
         );
 
+        setCurrentIndex(eachSong.id - 1);
         setSound(newSound);
         setIsPlaying(true);
         setCurrSong(eachSong);
@@ -122,14 +164,14 @@ export default function App() {
   };
 
   const onPlaybackStatusUpdate = (status) => {
-    // console.log('====================================');
-    // console.log(status);
-    // console.log('====================================');
     if (status.isLoaded && !status.isLooping) {
       const progress = status.positionMillis / status.durationMillis;
       setPlaybackProgress(progress);
       setCurrentTime(status.positionMillis);
       setDuration(status.durationMillis);
+    }
+    if (status.didJustFinish && !isLoading) {
+      setShouldPlayNext(true);
     }
   };
 
@@ -149,15 +191,7 @@ export default function App() {
 
         <ScrollView horizontal contentContainerStyle={styles.scrollContainer}>
           <View style={styles.row}>
-            <View>
-              <ImageBackground source={song1} style={styles.backgroundImage}>
-                {/* <View style={styles.content}>
-                <Text style={styles.text}>Item 1</Text>
-              </View> */}
-              </ImageBackground>
-              <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
-            </View>
-            {songs.map((eachSong, id) => {
+            {TopSongs1.map((eachSong, id) => {
               return (
                 <TouchableOpacity key={id} onPress={() => playSong(eachSong)}>
                   <ImageBackground
@@ -170,15 +204,6 @@ export default function App() {
                 </TouchableOpacity>
               );
             })}
-
-            <View>
-              <ImageBackground source={song1} style={styles.backgroundImage}>
-                {/* <View style={styles.content}>
-                  <Text style={styles.text}>Arijit Singh</Text>
-                </View> */}
-              </ImageBackground>
-              <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
-            </View>
           </View>
           <View style={styles.row}>
             <View>
@@ -266,6 +291,9 @@ export default function App() {
           setCurrentTime={setCurrentTime}
           currSong={currSong}
           togglePlayPause={togglePlayPause}
+          TopSongs1={TopSongs1}
+          currentIndex={currentIndex}
+          setCurrentIndex={setCurrentIndex}
         />
       </View>
     </View>

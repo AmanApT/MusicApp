@@ -15,17 +15,33 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "entitlements": {
+          "audio": ["ANY"]
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["INTERNET", "WAKE_LOCK", "AUDIO_FOCUS_REQUEST_DELAY_TRANSIENT"]
+      "permissions": [
+        "INTERNET",
+        "WAKE_LOCK",
+        "AUDIO_FOCUS_REQUEST_DELAY_TRANSIENT",
+        "FOREGROUND_SERVICE"
+      ],
+      "package": "com.anupreet_as.MusicApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "026a242b-d780-4eeb-ae6d-3b91b84df3f3"
+      }
     }
   }
 }

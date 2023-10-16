@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import cover from "../assets/coverSong.jpg";
 import {
   Modal,
@@ -30,6 +30,9 @@ export default function ModalComp({
   currentTime,
   currSong,
   togglePlayPause,
+  TopSongs1,
+  currentIndex,
+  setCurrentIndex,
 }) {
   const panResponder = useRef(
     PanResponder.create({
@@ -46,6 +49,23 @@ export default function ModalComp({
       },
     })
   ).current;
+
+  const playNextSong = async () => {
+    const nextIndex = (currentIndex + 1) % TopSongs1.length;
+    await playSong(TopSongs1[nextIndex]);
+    setCurrentIndex(nextIndex);
+  };
+
+  const playPrevSong = async () => {
+    let prevIndex = 0;
+    if (currentIndex == 0) {
+      prevIndex = 0;
+    } else {
+      prevIndex = (currentIndex - 1 + TopSongs1.length) % TopSongs1.length;
+    }
+    await playSong(TopSongs1[prevIndex]);
+    setCurrentIndex(prevIndex);
+  };
 
   const debouncedUpdateProgress = debounce((value) => {
     setPlaybackProgress(value);
@@ -120,7 +140,7 @@ export default function ModalComp({
             </View>
 
             <View style={styles.controlContainer}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={playPrevSong}>
                 <MaterialIcons color="white" name="skip-previous" size={32} />
               </TouchableOpacity>
               <TouchableOpacity onPress={togglePlayPause}>
@@ -130,7 +150,7 @@ export default function ModalComp({
                   <AntDesign name="play" size={32} color="white" />
                 )}
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={playNextSong}>
                 <MaterialIcons color="white" name="skip-next" size={32} />
               </TouchableOpacity>
             </View>
