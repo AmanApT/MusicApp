@@ -21,7 +21,6 @@ import ModalComp from "./components/ModalComp";
 import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av";
 import gif from "./assets/gif.gif";
 import TopSongs1 from "./components/listOfSongs";
-// import TrackPlayer from "react-native-track-player";
 
 export default function App() {
   useEffect(() => {
