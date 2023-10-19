@@ -27,6 +27,27 @@ const TopSongs1 = [
     imagePath: require("../assets/Song3_img.jpg"),
     songPath: require("../assets/Song4.mp3"),
   },
+  {
+    id: 5,
+    title: "Acha Ji Mein Hari",
+    artist: "Asha Bhosle",
+    imagePath: require("../assets/Song3_img.jpg"),
+    songPath: require("../assets/Song4.mp3"),
+  },
+  {
+    id: 6,
+    title: "Acha Ji Mein Hari",
+    artist: "Asha Bhosle",
+    imagePath: require("../assets/Song3_img.jpg"),
+    songPath: require("../assets/Song4.mp3"),
+  },
+  {
+    id: 7,
+    title: "Acha Ji Mein Hari",
+    artist: "Asha Bhosle",
+    imagePath: require("../assets/Song3_img.jpg"),
+    songPath: require("../assets/Song4.mp3"),
+  },
 ];
 
 export default TopSongs1;

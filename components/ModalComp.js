@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import cover from "../assets/coverSong.jpg";
 import {
   Modal,
@@ -16,6 +16,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { debounce } from "lodash";
+
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function ModalComp({
   windowHeight,
@@ -49,6 +52,11 @@ export default function ModalComp({
       },
     })
   ).current;
+
+  const sheetRef = useRef(null);
+  const [sheetIsOpen, setSheetIsOpen] = useState(true);
+
+  const snapPoints = ["10%", "100%"];
 
   const playNextSong = async () => {
     const nextIndex = (currentIndex + 1) % TopSongs1.length;
@@ -86,76 +94,109 @@ export default function ModalComp({
       onRequestClose={handleCloseBottomSheet}
     >
       <LinearGradient colors={["#8BF5FA", "#000"]} style={styles.background}>
-        <View style={[styles.modalContainer]}>
-          <View style={styles.bottomSheet} {...panResponder.panHandlers}>
-            <View style={styles.imageContainer}>
-              <ImageBackground
-                source={currSong ? currSong.imagePath : cover}
-                style={{ width: 290, height: 290 }}
-              />
-            </View>
-            <View>
-              <Text style={styles.songTitle}>
-                {currSong ? currSong.title : ""}
-              </Text>
-              <Text style={styles.songArtist}>
-                {currSong ? currSong.artist : ""}
-              </Text>
-            </View>
-
-            <View>
-              <Slider
-                style={styles.progessBar}
-                minimumValue={0}
-                maximumValue={1}
-                minimumTrackTintColor="blue"
-                maximumTrackTintColor="black"
-                thumbTintColor="blue"
-                value={playbackProgress}
-                onSlidingStart={() => {
-                  if (isPlaying) {
-                    sound.pauseAsync();
-                  }
-                }}
-                onValueChange={(value) => {
-                  debouncedUpdateProgress(value);
-                }}
-                onSlidingComplete={async (value) => {
-                  if (sound) {
-                    const newPosition = value * duration;
-                    await sound.setPositionAsync(newPosition);
-                    if (isPlaying) {
-                      sound.playAsync();
-                    }
-                  }
-                }}
-              />
-
-              <View style={styles.durationContainer}>
-                <Text style={styles.currentTime}>
-                  {formatTime(currentTime)}
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <View style={[styles.modalContainer]}>
+            <View style={styles.bottomSheet} {...panResponder.panHandlers}>
+              <View style={styles.imageContainer}>
+                <ImageBackground
+                  source={currSong ? currSong.imagePath : cover}
+                  style={{ width: 290, height: 290 }}
+                />
+              </View>
+              <View>
+                <Text style={styles.songTitle}>
+                  {currSong ? currSong.title : ""}
                 </Text>
-                <Text style={styles.currentTime}>{formatTime(duration)}</Text>
+                <Text style={styles.songArtist}>
+                  {currSong ? currSong.artist : ""}
+                </Text>
+              </View>
+
+              <View>
+                <Slider
+                  style={styles.progessBar}
+                  minimumValue={0}
+                  maximumValue={1}
+                  minimumTrackTintColor="blue"
+                  maximumTrackTintColor="black"
+                  thumbTintColor="blue"
+                  value={playbackProgress}
+                  onSlidingStart={() => {
+                    if (isPlaying) {
+                      sound.pauseAsync();
+                    }
+                  }}
+                  onValueChange={(value) => {
+                    debouncedUpdateProgress(value);
+                  }}
+                  onSlidingComplete={async (value) => {
+                    if (sound) {
+                      const newPosition = value * duration;
+                      await sound.setPositionAsync(newPosition);
+                      if (isPlaying) {
+                        sound.playAsync();
+                      }
+                    }
+                  }}
+                />
+
+                <View style={styles.durationContainer}>
+                  <Text style={styles.currentTime}>
+                    {formatTime(currentTime)}
+                  </Text>
+                  <Text style={styles.currentTime}>{formatTime(duration)}</Text>
+                </View>
+              </View>
+
+              <View style={styles.controlContainer}>
+                <TouchableOpacity onPress={playPrevSong}>
+                  <MaterialIcons color="white" name="skip-previous" size={32} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={togglePlayPause}>
+                  {isPlaying ? (
+                    <AntDesign name="pause" size={32} color="white" />
+                  ) : (
+                    <AntDesign name="play" size={32} color="white" />
+                  )}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={playNextSong}>
+                  <MaterialIcons color="white" name="skip-next" size={32} />
+                </TouchableOpacity>
               </View>
             </View>
 
-            <View style={styles.controlContainer}>
-              <TouchableOpacity onPress={playPrevSong}>
-                <MaterialIcons color="white" name="skip-previous" size={32} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={togglePlayPause}>
-                {isPlaying ? (
-                  <AntDesign name="pause" size={32} color="white" />
-                ) : (
-                  <AntDesign name="play" size={32} color="white" />
-                )}
-              </TouchableOpacity>
-              <TouchableOpacity onPress={playNextSong}>
-                <MaterialIcons color="white" name="skip-next" size={32} />
-              </TouchableOpacity>
-            </View>
+            <BottomSheet
+              ref={sheetRef}
+              snapPoints={snapPoints}
+              enablePanDownToClose={false}
+              backgroundStyle="grey"
+              // onClose={() => setSheetIsOpen(false)}
+            >
+              <BottomSheetView style={{ paddingTop: 50 }}>
+                {TopSongs1.map((eachSong, id) => {
+                  return (
+                    <View
+                      id={id}
+                      style={{
+                        height: 60,
+                        flexDirection: "row",
+                        paddingHorizontal: 20,
+                        alignItems: "center",
+                        gap: 20,
+                      }}
+                    >
+                      <ImageBackground
+                        source={eachSong.imagePath}
+                        style={{ width: 45, height: 45 }}
+                      />
+                      <Text>{eachSong.title}</Text>
+                    </View>
+                  );
+                })}
+              </BottomSheetView>
+            </BottomSheet>
           </View>
-        </View>
+        </GestureHandlerRootView>
       </LinearGradient>
     </Modal>
   );

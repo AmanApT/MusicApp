@@ -9,6 +9,7 @@ import {
   ImageBackground,
   Dimensions,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import searchIcon from "./assets/Vector.png";
@@ -174,6 +175,16 @@ export default function App() {
     }
   };
 
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => playSong(item)}>
+      <ImageBackground
+        source={item.imagePath}
+        style={styles.backgroundImage}
+      ></ImageBackground>
+      <Text style={styles.backgroundImageText}>{item.title}</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
       <LinearGradient colors={["#22004e", "#000"]} style={styles.background}>
@@ -189,77 +200,54 @@ export default function App() {
         </View>
 
         <ScrollView horizontal contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.row}>
-            {TopSongs1.map((eachSong, id) => {
-              return (
-                <TouchableOpacity key={id} onPress={() => playSong(eachSong)}>
-                  <ImageBackground
-                    source={eachSong.imagePath}
-                    style={styles.backgroundImage}
-                  ></ImageBackground>
-                  <Text style={styles.backgroundImageText}>
-                    {eachSong.title}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-          <View style={styles.row}>
+          <FlatList
+            data={TopSongs1}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+            // horizontal
+            numColumns={5}
+          />
+          {/* <View style={styles.row}>
             <View>
-              <ImageBackground source={song1} style={styles.backgroundImage}>
-                {/* <View style={styles.content}>
-                  <Text style={styles.text}>Arijit Singh</Text>
-                </View> */}
-              </ImageBackground>
+              <ImageBackground
+                source={song1}
+                style={styles.backgroundImage}
+              ></ImageBackground>
               <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
             </View>
             <View>
-              <ImageBackground source={song1} style={styles.backgroundImage}>
-                {/* <View style={styles.content}>
-                  <Text style={styles.text}>Arijit Singh</Text>
-                </View> */}
-              </ImageBackground>
+              <ImageBackground
+                source={song1}
+                style={styles.backgroundImage}
+              ></ImageBackground>
               <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
             </View>
             <View>
-              <ImageBackground source={song1} style={styles.backgroundImage}>
-                {/* <View style={styles.content}>
-                  <Text style={styles.text}>Arijit Singh</Text>
-                </View> */}
-              </ImageBackground>
+              <ImageBackground
+                source={song1}
+                style={styles.backgroundImage}
+              ></ImageBackground>
               <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
             </View>
-          </View>
+          </View> */}
         </ScrollView>
       </LinearGradient>
       <View
         style={{
           backgroundColor: "#22004e",
           height: 70,
-          // paddingLeft: 20,
-          // paddingRight: 20,
           padding: 20,
-          // width: "80%",
         }}
       >
         <TouchableOpacity
           onPress={handleOpenBottomSheet}
           style={{
             flex: 1,
-
-            // width: "90%",
-            // alignItems: "flex-start",
-            // paddingHorizontal: 15,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            // borderWidth: 1,
-            // borderColor: "#86827e",
-            // paddingVertical: 12,
-            // borderRadius: 8,
           }}
         >
-          {/* <Text style={{ color: "white" }}>Click Me</Text> */}
           <View style={{ flexDirection: "row", gap: 200 }}>
             <View style={{ flexDirection: "row" }}>
               <View
@@ -329,14 +317,17 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
   scrollContainer: {
-    flexDirection: "column",
-    alignItems: "flex-start",
+    // width: "100%",
+    // flexDirection: "column",
+    // alignItems: "flex-start",
     marginTop: "10%",
-    gap: 20,
+    // gap: 20,
   },
 
   row: {
     flexDirection: "row",
+    // width: 200,
+    // overflow: "scroll",
     // marginBottom: 10,
   },
   backgroundImage: {
