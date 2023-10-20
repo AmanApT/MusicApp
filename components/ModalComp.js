@@ -9,6 +9,7 @@ import {
   Image,
   Text,
   ImageBackground,
+  Pressable,
 } from "react-native";
 // import image from "../assets/"
 import Slider from "@react-native-community/slider";
@@ -19,6 +20,7 @@ import { debounce } from "lodash";
 
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import CustomBackground from "./CustomBackground";
 
 export default function ModalComp({
   windowHeight,
@@ -56,7 +58,7 @@ export default function ModalComp({
   const sheetRef = useRef(null);
   const [sheetIsOpen, setSheetIsOpen] = useState(true);
 
-  const snapPoints = ["10%", "100%"];
+  const snapPoints = ["7%", "100%"];
 
   const playNextSong = async () => {
     const nextIndex = (currentIndex + 1) % TopSongs1.length;
@@ -78,6 +80,14 @@ export default function ModalComp({
   const debouncedUpdateProgress = debounce((value) => {
     setPlaybackProgress(value);
   }, 200);
+
+   const handleListSongs = async (index)=>{
+    console.log('====================================');
+    console.log("heei");
+    console.log('====================================');
+    await playSong(TopSongs1[index]);
+    setCurrentIndex(nextIndex);
+  }
 
   const formatTime = (milliseconds) => {
     const seconds = Math.floor(milliseconds / 1000);
@@ -169,14 +179,16 @@ export default function ModalComp({
               ref={sheetRef}
               snapPoints={snapPoints}
               enablePanDownToClose={false}
-              backgroundStyle="grey"
+              // style={{ backgroundColor: 'red' }}
+              backgroundComponent={CustomBackground}
               // onClose={() => setSheetIsOpen(false)}
             >
-              <BottomSheetView style={{ paddingTop: 50 }}>
+              <BottomSheetView style={{paddingTop: 50 }}>
                 {TopSongs1.map((eachSong, id) => {
                   return (
-                    <View
-                      id={id}
+                    <Pressable
+                      onPress={()=>{handleListSongs(id)}}
+                      key={id}
                       style={{
                         height: 60,
                         flexDirection: "row",
@@ -190,7 +202,7 @@ export default function ModalComp({
                         style={{ width: 45, height: 45 }}
                       />
                       <Text>{eachSong.title}</Text>
-                    </View>
+                    </Pressable>
                   );
                 })}
               </BottomSheetView>
