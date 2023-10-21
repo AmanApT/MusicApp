@@ -81,13 +81,10 @@ export default function ModalComp({
     setPlaybackProgress(value);
   }, 200);
 
-   const handleListSongs = async (index)=>{
-    console.log('====================================');
-    console.log("heei");
-    console.log('====================================');
+  const handleListSongs = async (index) => {
     await playSong(TopSongs1[index]);
-    setCurrentIndex(nextIndex);
-  }
+    setCurrentIndex(index + 1);
+  };
 
   const formatTime = (milliseconds) => {
     const seconds = Math.floor(milliseconds / 1000);
@@ -183,11 +180,13 @@ export default function ModalComp({
               backgroundComponent={CustomBackground}
               // onClose={() => setSheetIsOpen(false)}
             >
-              <BottomSheetView style={{paddingTop: 50 }}>
+              <BottomSheetView style={{ paddingTop: 50 }}>
                 {TopSongs1.map((eachSong, id) => {
                   return (
                     <Pressable
-                      onPress={()=>{handleListSongs(id)}}
+                      onPress={() => {
+                        handleListSongs(id);
+                      }}
                       key={id}
                       style={{
                         height: 60,
@@ -195,6 +194,8 @@ export default function ModalComp({
                         paddingHorizontal: 20,
                         alignItems: "center",
                         gap: 20,
+                        backgroundColor:
+                          id === currentIndex - 1 ? "purple" : "transparent",
                       }}
                     >
                       <ImageBackground

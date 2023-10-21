@@ -186,28 +186,29 @@ export default function App() {
   );
 
   return (
-    <View style={styles.container}>
-      <LinearGradient colors={["#22004e", "#000"]} style={styles.background}>
-        <View style={styles.brandContainer}>
-          <View style={styles.brandContainerLeft}>
-            <Image source={myMusicLogo} style={styles.logo} />
-            <Text style={styles.logoText}>My Music</Text>
+    <>
+      <ScrollView style={styles.container}>
+        <LinearGradient colors={["#22004e", "#000"]} style={styles.background}>
+          <View style={styles.brandContainer}>
+            <View style={styles.brandContainerLeft}>
+              <Image source={myMusicLogo} style={styles.logo} />
+              <Text style={styles.logoText}>My Music</Text>
+            </View>
+            <Image source={searchIcon} style={styles.searchIcon} />
           </View>
-          <Image source={searchIcon} style={styles.searchIcon} />
-        </View>
-        <View style={styles.topPickContainer}>
-          <Text style={styles.topPickHeading}>Top Picks</Text>
-        </View>
+          <View style={styles.topPickContainer}>
+            <Text style={styles.topPickHeading}>Top Picks</Text>
+          </View>
 
-        <ScrollView horizontal contentContainerStyle={styles.scrollContainer}>
-          <FlatList
-            data={TopSongs1}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
-            // horizontal
-            numColumns={5}
-          />
-          {/* <View style={styles.row}>
+          <ScrollView horizontal contentContainerStyle={styles.scrollContainer}>
+            <FlatList
+              data={TopSongs1}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id.toString()}
+              // horizontal
+              numColumns={5}
+            />
+            {/* <View style={styles.row}>
             <View>
               <ImageBackground
                 source={song1}
@@ -230,8 +231,38 @@ export default function App() {
               <Text style={styles.backgroundImageText}>Apna Bana Le</Text>
             </View>
           </View> */}
-        </ScrollView>
-      </LinearGradient>
+          </ScrollView>
+
+          <View style={{ marginTop: 30 }}>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 25,
+                fontWeight: 700,
+                marginBottom: 30,
+              }}
+            >
+              Old Songs
+            </Text>
+            <ScrollView horizontal>
+              <View>
+                <ImageBackground
+                  source={TopSongs1[0].imagePath}
+                  style={{ width: 150, height: 150 }}
+                />
+                <Text style={{ color: "white" }}>Hindi Songs</Text>
+              </View>
+              <View>
+                <ImageBackground
+                  source={TopSongs1[0].imagePath}
+                  style={{ width: 150, height: 150 }}
+                />
+                <Text style={{ color: "white" }}>English Songs</Text>
+              </View>
+            </ScrollView>
+          </View>
+        </LinearGradient>
+      </ScrollView>
       <View
         style={{
           backgroundColor: "#22004e",
@@ -283,7 +314,7 @@ export default function App() {
           setCurrentIndex={setCurrentIndex}
         />
       </View>
-    </View>
+    </>
   );
 }
 
@@ -309,8 +340,8 @@ const styles = StyleSheet.create({
     height: 40,
   },
   background: {
-    flex: 1,
-    width: "100%",
+    // flex: 1,
+    // width: "100%",
     paddingTop: 50,
     padding: 15,
     // alignItems: "center",
@@ -320,8 +351,12 @@ const styles = StyleSheet.create({
     // width: "100%",
     // flexDirection: "column",
     // alignItems: "flex-start",
+    // height: 30,
     marginTop: "10%",
     // gap: 20,
+    // borderColor: "white",
+    // borderWidth: 10,
+    // borderStyle: "solid",
   },
 
   row: {
