@@ -285,9 +285,10 @@ export default function App() {
         >
           <View style={{ flexDirection: "row", gap: 200 }}>
             <View style={{ flexDirection: "row" }}>
-              <View
-                style={{ backgroundColor: "yellow", width: 30, height: 30 }}
-              ></View>
+              <ImageBackground
+                source={currSong?.imagePath}
+                style={{ width: 30, height: 30 }}
+              />
               <Text style={{ color: "white", marginLeft: 10 }}>
                 {currSong ? currSong.title : ""}
               </Text>
