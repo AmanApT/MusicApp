@@ -10,6 +10,7 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
+  Pressable,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import searchIcon from "./assets/Vector.png";
@@ -21,7 +22,8 @@ import { useEffect, useRef, useState } from "react";
 import ModalComp from "./components/ModalComp";
 import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av";
 import gif from "./assets/gif.gif";
-import TopSongs1 from "./components/listOfSongs";
+import { TopSongs1, OldHindiSongs } from "./components/listOfSongs";
+import AlbumList from "./components/AlbumList";
 
 export default function App() {
   useEffect(() => {
@@ -70,6 +72,8 @@ export default function App() {
   const [currSong, setCurrSong] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [shouldPlayNext, setShouldPlayNext] = useState(false);
+  const [albumListOpen, setAlbumListOpen] = useState(false);
+  const [listOfSongsIndex, setListOfSongsIndex] = useState(0);
 
   useEffect(() => {
     // Check if the next song should be played
@@ -245,13 +249,13 @@ export default function App() {
               Old Songs
             </Text>
             <ScrollView horizontal>
-              <View>
+              <Pressable onPress={() => setAlbumListOpen(true)}>
                 <ImageBackground
                   source={TopSongs1[0].imagePath}
                   style={{ width: 150, height: 150 }}
                 />
                 <Text style={{ color: "white" }}>Hindi Songs</Text>
-              </View>
+              </Pressable>
               <View>
                 <ImageBackground
                   source={TopSongs1[0].imagePath}
@@ -309,9 +313,16 @@ export default function App() {
           setCurrentTime={setCurrentTime}
           currSong={currSong}
           togglePlayPause={togglePlayPause}
-          TopSongs1={TopSongs1}
+          songs={listOfSongsIndex === 0 ? TopSongs1 : OldHindiSongs}
           currentIndex={currentIndex}
           setCurrentIndex={setCurrentIndex}
+        />
+        <AlbumList
+          albumListOpen={albumListOpen}
+          setAlbumListOpen={setAlbumListOpen}
+          OldHindiSongs={OldHindiSongs}
+          playSong={playSong}
+          setListOfSongsIndex={setListOfSongsIndex}
         />
       </View>
     </>

@@ -35,7 +35,7 @@ export default function ModalComp({
   currentTime,
   currSong,
   togglePlayPause,
-  TopSongs1,
+  songs,
   currentIndex,
   setCurrentIndex,
 }) {
@@ -61,8 +61,8 @@ export default function ModalComp({
   const snapPoints = ["7%", "100%"];
 
   const playNextSong = async () => {
-    const nextIndex = (currentIndex + 1) % TopSongs1.length;
-    await playSong(TopSongs1[nextIndex]);
+    const nextIndex = (currentIndex + 1) % songs.length;
+    await playSong(songs[nextIndex]);
     setCurrentIndex(nextIndex);
   };
 
@@ -71,9 +71,9 @@ export default function ModalComp({
     if (currentIndex == 0) {
       prevIndex = 0;
     } else {
-      prevIndex = (currentIndex - 1 + TopSongs1.length) % TopSongs1.length;
+      prevIndex = (currentIndex - 1 + songs.length) % songs.length;
     }
-    await playSong(TopSongs1[prevIndex]);
+    await playSong(songs[prevIndex]);
     setCurrentIndex(prevIndex);
   };
 
@@ -82,7 +82,7 @@ export default function ModalComp({
   }, 200);
 
   const handleListSongs = async (index) => {
-    await playSong(TopSongs1[index]);
+    await playSong(songs[index]);
     setCurrentIndex(index + 1);
   };
 
@@ -181,7 +181,7 @@ export default function ModalComp({
               // onClose={() => setSheetIsOpen(false)}
             >
               <BottomSheetView style={{ paddingTop: 50 }}>
-                {TopSongs1.map((eachSong, id) => {
+                {songs.map((eachSong, id) => {
                   return (
                     <Pressable
                       onPress={() => {
@@ -245,8 +245,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 30,
     marginBottom: 25,
-    borderWidth: 4,
-    borderColor: "blue",
+    // borderWidth: 4,
+    // borderColor: "blue",
   },
   songTitle: {
     fontSize: 20,
