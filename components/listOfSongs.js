@@ -101,3 +101,13 @@ export const OldHindiSongs = [
     songPath: require("../assets/Song4.mp3"),
   },
 ];
+
+export const NewHindiSongs = [
+  {
+    id: 1,
+    title: "Aashiyan",
+    artist: "Pritam, Shreya Ghoshal",
+    imagePath: require("../assets/songs/newSongs/Aashiyan.jpeg"),
+    songPath: require("../assets/songs/newSongs/Aashiyan.mp3"),
+  },
+];

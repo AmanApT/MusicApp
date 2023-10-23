@@ -5,13 +5,13 @@ import image from "../assets/coverSong.jpg";
 export default function AlbumList({
   albumListOpen,
   setAlbumListOpen,
-  OldHindiSongs,
+  songs,
   playSong,
   setListOfSongsIndex,
 }) {
   const handleListSongs = () => {
     setAlbumListOpen(false);
-    setListOfSongsIndex(1);
+    // setListOfSongsIndex(1);
   };
   return (
     <Modal
@@ -48,7 +48,7 @@ export default function AlbumList({
             </View>
           </View>
         </View>
-        {OldHindiSongs.map((eachSong, id) => {
+        {songs.map((eachSong, id) => {
           return (
             <Pressable
               style={{ padding: 10 }}

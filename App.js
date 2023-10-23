@@ -22,7 +22,11 @@ import { useEffect, useRef, useState } from "react";
 import ModalComp from "./components/ModalComp";
 import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av";
 import gif from "./assets/gif.gif";
-import { TopSongs1, OldHindiSongs } from "./components/listOfSongs";
+import {
+  TopSongs1,
+  OldHindiSongs,
+  NewHindiSongs,
+} from "./components/listOfSongs";
 import AlbumList from "./components/AlbumList";
 
 export default function App() {
@@ -74,6 +78,7 @@ export default function App() {
   const [shouldPlayNext, setShouldPlayNext] = useState(false);
   const [albumListOpen, setAlbumListOpen] = useState(false);
   const [listOfSongsIndex, setListOfSongsIndex] = useState(0);
+  const [albumIndex, setAlbumIndex] = useState(0);
 
   useEffect(() => {
     // Check if the next song should be played
@@ -246,23 +251,36 @@ export default function App() {
                 marginBottom: 30,
               }}
             >
-              Old Songs
+              Hindi Songs
             </Text>
             <ScrollView horizontal>
-              <Pressable onPress={() => setAlbumListOpen(true)}>
+              <TouchableOpacity
+                onPress={() => {
+                  setAlbumListOpen(true);
+                  setAlbumIndex(0);
+                  setListOfSongsIndex(1);
+                }}
+                style={{ marginRight: 20 }}
+              >
                 <ImageBackground
                   source={TopSongs1[0].imagePath}
                   style={{ width: 150, height: 150 }}
                 />
-                <Text style={{ color: "white" }}>Hindi Songs</Text>
-              </Pressable>
-              <View>
+                <Text style={{ color: "white" }}>Old Hindi Songs</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setAlbumListOpen(true);
+                  setAlbumIndex(1);
+                  setListOfSongsIndex(2);
+                }}
+              >
                 <ImageBackground
                   source={TopSongs1[0].imagePath}
                   style={{ width: 150, height: 150 }}
                 />
-                <Text style={{ color: "white" }}>English Songs</Text>
-              </View>
+                <Text style={{ color: "white" }}>New/Cover Songs</Text>
+              </TouchableOpacity>
             </ScrollView>
           </View>
         </LinearGradient>
@@ -314,14 +332,20 @@ export default function App() {
           setCurrentTime={setCurrentTime}
           currSong={currSong}
           togglePlayPause={togglePlayPause}
-          songs={listOfSongsIndex === 0 ? TopSongs1 : OldHindiSongs}
+          songs={
+            listOfSongsIndex === 0
+              ? TopSongs1
+              : listOfSongsIndex === 1
+              ? OldHindiSongs
+              : NewHindiSongs
+          }
           currentIndex={currentIndex}
           setCurrentIndex={setCurrentIndex}
         />
         <AlbumList
           albumListOpen={albumListOpen}
           setAlbumListOpen={setAlbumListOpen}
-          OldHindiSongs={OldHindiSongs}
+          songs={albumIndex === 0 ? OldHindiSongs : NewHindiSongs}
           playSong={playSong}
           setListOfSongsIndex={setListOfSongsIndex}
         />
