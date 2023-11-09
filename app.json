@@ -25,17 +25,13 @@
       "permissions": [
         "INTERNET",
         "WAKE_LOCK",
-        "AUDIO_FOCUS_REQUEST_DELAY_TRANSIENT"
+        "AUDIO_FOCUS_REQUEST_DELAY_TRANSIENT",
+        "NOTIFICATIONS"
       ],
       "package": "com.aman_ap.MusicApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "15e42b74-5456-4616-8332-906eb65e40a8"
-      }
     }
   }
 }

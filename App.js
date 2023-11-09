@@ -29,6 +29,8 @@ import {
 } from "./components/listOfSongs";
 import AlbumList from "./components/AlbumList";
 
+import * as Notifications from "expo-notifications";
+
 export default function App() {
   useEffect(() => {
     const setupAudio = async () => {
@@ -94,6 +96,32 @@ export default function App() {
     }
   }, [shouldPlayNext]);
 
+  useEffect(() => {
+    console.log("Notification response listener attached");
+
+    const subscription = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        console.log("Notification response received:", response);
+
+        const actionIdentifier = response.actionIdentifier;
+        switch (actionIdentifier) {
+          case "PLAY_PAUSE":
+            togglePlayPause();
+            break;
+          case "NEXT":
+            // Handle next action
+            break;
+          // Add more cases for other actions if needed
+        }
+      }
+    );
+
+    return () => {
+      console.log("Notification response listener removed");
+      subscription.remove();
+    };
+  }, []);
+
   // const soundRef = useRef();
 
   const playSong = async (eachSong) => {
@@ -142,6 +170,7 @@ export default function App() {
         setIsPlaying(true);
         setCurrSong(eachSong);
       }
+      showMediaControlsNotification(eachSong.title);
     } catch (error) {
       console.error("Error playing the song", error);
     }
@@ -193,6 +222,72 @@ export default function App() {
       <Text style={styles.backgroundImageText}>{item.title}</Text>
     </TouchableOpacity>
   );
+
+  let mediaControlsNotificationIdentifier = "mediaControlsNotification"; // Set a default identifier
+
+  const showMediaControlsNotification = async (songTitle) => {
+    try {
+      // Set notification handler
+      Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowAlert: true,
+          shouldPlaySound: false,
+          shouldSetBadge: false,
+        }),
+      });
+
+      // Define custom actions for media controls
+      const actionPlayPause = {
+        identifier: "PLAY_PAUSE",
+        title: isPlaying ? "Pause" : "Play",
+      };
+
+      const actionNext = {
+        identifier: "NEXT",
+        title: "Next",
+      };
+
+      // Register the actions
+      await Notifications.setNotificationCategoryAsync("mediaControls", [
+        actionPlayPause,
+        actionNext,
+      ]);
+
+      // Check if a notification with the same identifier already exists
+      const existingNotifications =
+        await Notifications.getPresentedNotificationsAsync();
+
+      // If a notification with the same identifier exists, update it
+      if (existingNotifications.length > 0) {
+        await Notifications.scheduleNotificationAsync({
+          identifier: mediaControlsNotificationIdentifier,
+          categoryId: "mediaControls",
+          content: {
+            title: "Basic Notification",
+            body: songTitle,
+          },
+          trigger: null,
+        });
+      } else {
+        // If no existing notification, schedule a new one
+        const mainNotification = await Notifications.scheduleNotificationAsync({
+          identifier: mediaControlsNotificationIdentifier,
+          categoryId: "mediaControls",
+          content: {
+            title: "Basic Notification",
+            body: songTitle,
+          },
+          trigger: null,
+        });
+
+        console.log("Media Controls Notification Scheduled:", mainNotification);
+      }
+    } catch (error) {
+      console.error("Error scheduling media controls notification:", error);
+    }
+  };
+
+  // console.log(sound);
 
   return (
     <>
